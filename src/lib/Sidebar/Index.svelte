@@ -16,6 +16,7 @@
 	let Camera: typeof import('$lib/Sidebar/Camera.svelte');
 	let Configure: typeof import('$lib/Sidebar/Configure.svelte');
 	let Date: typeof import('$lib/Sidebar/Date.svelte');
+	let DateTime: typeof import('$lib/Sidebar/DateTime.svelte');	
 	let Divider: typeof import('$lib/Sidebar/Divider.svelte');
 	let Graph: typeof import('$lib/Sidebar/Graph.svelte');
 	let History: typeof import('$lib/Sidebar/History.svelte');
@@ -23,6 +24,7 @@
 	let Image: typeof import('$lib/Sidebar/Image.svelte');
 	let Navigate: typeof import('$lib/Sidebar/Navigate.svelte');
 	let Notifications: typeof import('$lib/Sidebar/Notifications.svelte');
+	let Person: typeof import('$lib/Sidebar/Person.svelte');	
 	let Radial: typeof import('$lib/Sidebar/Radial.svelte');
 	let Sensor: typeof import('$lib/Sidebar/Sensor.svelte');
 	let Template: typeof import('$lib/Sidebar/Template.svelte');
@@ -36,6 +38,7 @@
 		camera: () => import('$lib/Sidebar/Camera.svelte').then((module) => (Camera = module)),
 		configure: () => import('$lib/Sidebar/Configure.svelte').then((module) => (Configure = module)),
 		date: () => import('$lib/Sidebar/Date.svelte').then((module) => (Date = module)),
+		datetime: () => import('$lib/Sidebar/DateTime.svelte').then((module) => (DateTime = module)),
 		divider: () => import('$lib/Sidebar/Divider.svelte').then((module) => (Divider = module)),
 		graph: () => import('$lib/Sidebar/Graph.svelte').then((module) => (Graph = module)),
 		history: () => import('$lib/Sidebar/History.svelte').then((module) => (History = module)),
@@ -44,6 +47,7 @@
 		navigate: () => import('$lib/Sidebar/Navigate.svelte').then((module) => (Navigate = module)),
 		notifications: () =>
 			import('$lib/Sidebar/Notifications.svelte').then((module) => (Notifications = module)),
+		person: () => import('$lib/Sidebar/Person.svelte').then((module) => (Person = module)),			
 		radial: () => import('$lib/Sidebar/Radial.svelte').then((module) => (Radial = module)),
 		sensor: () => import('$lib/Sidebar/Sensor.svelte').then((module) => (Sensor = module)),
 		template: () => import('$lib/Sidebar/Template.svelte').then((module) => (Template = module)),
@@ -100,6 +104,8 @@
 				openModal(() => import('$lib/Modal/CameraConfig.svelte'), { sel });
 			} else if (sel?.type === 'date') {
 				openModal(() => import('$lib/Modal/DateConfig.svelte'), { sel });
+			} else if (sel?.type === 'datetime') {
+				openModal(() => import('$lib/Modal/DateTimeConfig.svelte'), { sel });								
 			} else if (sel?.type === 'divider') {
 				openModal(() => import('$lib/Modal/DividerConfig.svelte'), { sel });
 			} else if (sel?.type === 'graph') {
@@ -114,6 +120,8 @@
 				openModal(() => import('$lib/Modal/NavigateConfig.svelte'), { sel });
 			} else if (sel?.type === 'notifications') {
 				openModal(() => import('$lib/Modal/NotificationsConfig.svelte'), { sel });
+			} else if (sel?.type === 'person') {
+				openModal(() => import('$lib/Modal/PersonConfig.svelte'), { sel });					
 			} else if (sel?.type === 'radial') {
 				openModal(() => import('$lib/Modal/RadialConfig.svelte'), { sel });
 			} else if (sel?.type === 'sensor') {
@@ -253,6 +261,12 @@
 							/>
 						</button>
 
+						<!-- DATE & TIME -->
+					{:else if DateTime && item?.type === 'datetime'}
+						<button on:click={() => handleClick(item?.id)}>
+							<svelte:component this={DateTime.default} seconds={item?.seconds} hour12={item?.hour12} year={item?.year}/>		
+						</button>						
+
 						<!-- DIVIDER -->
 					{:else if Divider && item?.type === 'divider' && !hide_mobile}
 						<button on:click={() => handleClick(item?.id)} aria-label={item?.type} tabindex="-1">
@@ -311,6 +325,18 @@
 							</div>
 						{/key}
 
+						<!-- PERSON -->
+					{:else if Person && item?.type === 'person'}
+						<div on:click={() => handleClick(item?.id)}>
+							<svelte:component
+								this={Person.default}
+								entity_id={item?.entity_id}
+								battery_level_sensor={item?.battery_level_sensor}
+								entity_id_2={item?.entity_id_2}
+								battery_level_sensor_2={item?.battery_level_sensor_2}								
+							/>
+						</div>
+						
 						<!-- RADIAL -->
 					{:else if Radial && item?.type === 'radial' && !hide_mobile}
 						<div on:click={() => handleClick(item?.id)}>
